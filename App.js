@@ -1,20 +1,48 @@
-import { StatusBar } from 'expo-status-bar';
-import { StyleSheet, Text, View } from 'react-native';
+import 'react-native-gesture-handler';
+import React, {useEffect} from 'react';
+import { NavigationContainer } from '@react-navigation/native';
+import { createStackNavigator } from '@react-navigation/stack';
+import Home from './src/screens/home';
+import Login from './src/screens/login';
+import Registro from './src/screens/registro';
+const LoginStack = createStackNavigator();
+const HomeStack = createStackNavigator();
 
-export default function App() {
+function LoginStackScreen() {
   return (
-    <View style={styles.container}>
-      <Text>Open up App.js to start working on your app!</Text>
-      <StatusBar style="auto" />
-    </View>
+    <LoginStack.Navigator screenOptions={{ headerShown: false }}>
+      <LoginStack.Screen name="Login" component={Login} />
+      <LoginStack.Screen name="Registro" component={Registro} />
+    </LoginStack.Navigator>
   );
 }
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: '#fff',
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-});
+function HomeStackScreen() {
+  return (
+    <HomeStack.Navigator screenOptions={{ headerShown: false }}>
+      <HomeStack.Screen name="Home" component={Home} />
+    </HomeStack.Navigator>
+  );
+}
+  function AppNavigator() {
+    const { isAuthenticated } = useAuth();
+  
+    return (
+      <AppStack.Navigator screenOptions={{ headerShown: false }}>
+        {isAuthenticated ? (
+          <>
+            <AppStack.Screen name="HomeStack" component={HomeStackScreen} />
+          </>
+        ) : (
+          <AppStack.Screen name="LoginStack" component={LoginStackScreen} />
+        )}
+      </AppStack.Navigator>
+    );
+  }
+ 
+export default function App() {
+  return (
+      <NavigationContainer>
+        <AppNavigator/>
+      </NavigationContainer>
+  );
+}
